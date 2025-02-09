@@ -17,6 +17,10 @@ Ensure you have the following dependencies installed:
 ```bash
 pip install torch torchvision numpy pillow
 ```
+or
+```bash
+pip install -r requirements.txt
+```
 
 ## File Structure
 ```

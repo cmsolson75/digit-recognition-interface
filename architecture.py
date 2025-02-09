@@ -4,7 +4,14 @@ import numpy as np
 from torchvision import transforms
 
 class LeNet(nn.Module):
-    "Based on: http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf"
+    """
+    LeNet Convolutional Neural Network.
+
+    Architecture based on:
+    Yann LeCun et al., "Gradient-Based Learning Applied to Document Recognition"
+    (http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf)
+    """
+
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(1, 20, 5, 1)

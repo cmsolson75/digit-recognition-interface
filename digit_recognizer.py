@@ -6,8 +6,11 @@ import numpy as np
 from architecture import LeNet, pre_processing
 
 
-
 class DigitRecognizer:
+    """
+    Some UI setup and event handling patterns were initially adapted from:
+    https://gist.github.com/nikhilkumarsingh/85501ee2c3d8c0cfa9d1a27be5781f06
+    """
     DEFAULT_PEN_SIZE = 30.0
     DEFAULT_COLOR = "black"
 
@@ -39,11 +42,35 @@ class DigitRecognizer:
         self.setup()
         self.root.mainloop()
 
+    def setup(self):
+        """
+        Setup event bindings for painting.
+        """
+        self.old_x = None
+        self.old_y = None
+        self.canvas.bind("<B1-Motion>", self.paint)
+        self.canvas.bind("<ButtonRelease-1>", self.reset)
+
     def clear_canvas(self):
         """
         Clear Canvas of all paint
         """
         self.canvas.delete("all")
+
+    def process_and_predict(self):
+        """
+        Process canvas drawing and make a prediction.
+        """
+        self.canvas.update()
+        ps = self.canvas.postscript(colormode="color")
+        img = Image.open(io.BytesIO(ps.encode("utf-8"))).convert("L")
+        img_array = np.asarray(img)
+        img_array = 255 - img_array
+
+        img_array = img_array.astype(np.float32) / 255
+        prediction = self.predict(img_array)
+
+        self.result_label.config(text=prediction)
 
     def predict(self, img: np.ndarray) -> str:
         """
@@ -67,28 +94,9 @@ class DigitRecognizer:
         with torch.no_grad():
             img = img.to(self.device)
             pred = self.model(img)
-            return classes[pred[0].argmax(0)]
-
-    def setup(self):
-        self.old_x = None
-        self.old_y = None
-        self.canvas.bind("<B1-Motion>", self.paint)
-        self.canvas.bind("<ButtonRelease-1>", self.reset)
-
-    def update_text(self, text: str):
-        self.result_label.config(text=text)
-
-    def process_and_predict(self):
-        self.canvas.update()
-        ps = self.canvas.postscript(colormode="color")
-        img = Image.open(io.BytesIO(ps.encode("utf-8"))).convert("L")
-        img_array = np.asarray(img)
-        img_array = 255 - img_array
-
-        img_array = img_array.astype(np.float32) / 255
-        prediction = self.predict(img_array)
-
-        self.update_text(prediction)
+            prediction_label = classes[pred[0].argmax(0)]
+        
+        return prediction_label
 
     def paint(self, event):
         """

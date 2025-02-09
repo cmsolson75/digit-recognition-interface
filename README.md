@@ -1,7 +1,7 @@
 # Digit Recognition Interface
 
 ## Overview
-This project is designed as an basic educational tutorial to teach students how to deploy a neural network for digit recognition. The tutorial demonstrates the use of a convolutional neural network (CNN) for handwritten digit classification using Python, Tkinter for GUI interaction, and PyTorch for model implementation.
+This project is designed as an educational tutorial to teach students how to deploy a neural network for digit recognition. The tutorial demonstrates the use of a convolutional neural network (CNN) for handwritten digit classification using Python, Tkinter for GUI interaction, and PyTorch for model implementation.
 
 The application allows users to draw digits on a canvas and uses a trained LeNet model to predict the digit.
 
@@ -25,11 +25,11 @@ pip install -r requirements.txt
 ## File Structure
 ```
 .
-├── digit_recognizer.py  # Main application script with GUI and model integration
-├── architecture.py      # Neural network definitions
-├── model/               # Directory containing the trained model weights
-│   ├── leNet_model.pth  # Pre-trained LeNet model weights
-└── README.md            # Documentation
+├── digit_recognizer.py   # Main application script (GUI + Model Integration)
+├── architecture.py       # Neural Network Definitions (LeNet + Preprocessing)
+├── model/                # Trained Model Weights
+│   ├── leNet_model.pth   # Pre-trained LeNet Model
+└── README.md             # Documentation
 ```
 
 ## Usage
@@ -61,3 +61,21 @@ The drawn image undergoes preprocessing before classification:
 - Normalized using mean 0.5 and standard deviation 0.5.
 
 
+### Model Training
+The model was trained on the **MNIST dataset**. 
+
+**Training Setup:**
+- **Optimizer:** Adam (learning rate = 0.0001)
+- **Loss Function:** CrossEntropyLoss
+- **Batch Size:** 128
+- **Epochs:** 15
+
+**Data Augmentations:**
+
+To improve model robustness, the following augmentations were applied:
+- **Rotation:** Randomly rotates images by ±15°.
+- **Translation:** Shifts images up to 20% in any direction.
+- **Zoom:** Resizes images within 80%-120% of the original size.
+- **Perspective Distortion:** Slightly warps images.
+- **Color Jitter:** Randomly adjusts brightness and contrast.
+- **Normalization:** Scales pixel values to **[-1, 1]**.
